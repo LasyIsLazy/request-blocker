@@ -1,17 +1,40 @@
 console.log('background');
-chrome.webRequest.onBeforeRequest.addListener(
-  details => {
-    console.log('onBeforeRequest', details);
-    return getBlockResponse(details)
-    // return {
-    //   cancel: true,
-    // };
-  },
-  { urls: ['http://*/*', 'https://*/*'] },
-  ['blocking', 'extraHeaders', 'requestBody']
-);
 
-const getBlockResponse = (details) => {
-    // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-BlockingResponse
-    return undefined
+const KEY = 'BLOCK_LIST';
+function getList() {
+  return new Promise(resolve => {
+    chrome.storage.local.get([KEY], function (result) {
+      const list = result[KEY];
+      if (!Array.isArray(list)) {
+        return resolve([]);
+      }
+      resolve(list);
+    });
+  });
 }
+
+async function background() {
+  const list = await getList();
+  chrome.webRequest.onBeforeRequest.addListener(
+    details => {
+      console.log('onBeforeRequest', details);
+      return getBlockResponse(details);
+    },
+    { urls: ['http://*/*', 'https://*/*'] },
+    ['blocking', 'extraHeaders', 'requestBody']
+  );
+
+  const getBlockResponse = ({ url }) => {
+    // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-BlockingResponse
+    //   console.log('list', list);
+    if (list.indexOf(url) !== -1) {
+      console.log('block', url);
+      return {
+        cancel: true,
+      };
+    }
+    return undefined;
+  };
+}
+
+background();

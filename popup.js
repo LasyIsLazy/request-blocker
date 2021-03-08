@@ -1,27 +1,9 @@
-document.addEventListener('DOMContentLoaded', function (event) {
-  var addItemBtn = document.getElementById('addItem');
-  addItemBtn.onclick = addItem;
-  document.getElementById('clearList').onclick = clearList;
-});
-
 const KEY = 'BLOCK_LIST';
 
-async function addItem() {
-  //   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  //     chrome.tabs.sendMessage(
-  //       tabs[0].id,
-  //       { action: 'checkForWord' },
-  //       function (response) {
-  //         console.log('response', response);
-  //       }
-  //     );
-  //   });
-
-  const input = document.getElementById('input');
-  const value = input.value;
-  if (!value) return;
-  await pushList([value]);
-  input.value = '';
+async function updatePageList() {
+  const list = await getList();
+  console.log('updatePageList', list);
+  document.getElementById('list').innerHTML = list.join('<br/>');
 }
 
 function getList() {
@@ -29,7 +11,8 @@ function getList() {
     chrome.storage.local.get([KEY], function (result) {
       const list = result[KEY];
       if (!Array.isArray(list)) {
-        return resolve([]);
+        resolve([]);
+        return;
       }
       resolve(list);
     });
@@ -40,13 +23,10 @@ function pushList(value) {
   if (!Array.isArray(value)) {
     value = [];
   }
-  return getList().then(
-    list =>
-      new Promise(resolve => {
-        list.push(...value);
-        setList(list);
-      })
-  );
+  return getList().then(list => {
+    list.push(...value);
+    return setList(list);
+  });
 }
 
 function setList(value) {
@@ -61,3 +41,20 @@ function setList(value) {
 function clearList() {
   return setList([]);
 }
+
+document.addEventListener('DOMContentLoaded', function (event) {
+  updatePageList();
+  var addItemBtn = document.getElementById('addItem');
+  addItemBtn.onclick = async () => {
+    const input = document.getElementById('input');
+    const value = input.value;
+    if (!value) return;
+    await pushList([value]);
+    document.getElementById('input').value = '';
+    await updatePageList();
+  };
+  document.getElementById('clearList').onclick = async () => {
+    await clearList();
+    await updatePageList();
+  };
+});
