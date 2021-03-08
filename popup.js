@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
   var addItemBtn = document.getElementById('addItem');
   addItemBtn.onclick = async () => {
     const input = document.getElementById('input');
-    const value = input.value;
+    const value = { url: input.value };
     if (!value) return;
     await pushList([value]);
     document.getElementById('input').value = '';

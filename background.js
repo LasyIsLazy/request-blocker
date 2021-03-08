@@ -27,7 +27,7 @@ async function background() {
   const getBlockResponse = ({ url }) => {
     // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-BlockingResponse
     //   console.log('list', list);
-    if (list.indexOf(url) !== -1) {
+    if (list.findIndex(item => item.url === url) !== -1) {
       console.log('block', url);
       return {
         cancel: true,
