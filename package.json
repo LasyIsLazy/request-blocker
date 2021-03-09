@@ -9,6 +9,7 @@
     "rollup-plugin-copy": "^3.4.0"
   },
   "scripts": {
+    "dev": "rollup -c -w",
     "build": "rollup -c"
   },
   "repository": {
