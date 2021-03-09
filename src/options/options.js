@@ -2,7 +2,7 @@ import { clearList, getList, pushList, setList, Signal } from '../common';
 async function updatePageList() {
   const list = await getList();
   console.log('updatePageList', list);
-  const getItemHTML = ({ url }) => `<li>${url}</li>`;
+  const getItemHTML = ({ url, pathType }) => `<li>${pathType} ${url}</li>`;
   document.getElementById('list').innerHTML = `
     <ul>
     ${list.map(getItemHTML).join('')}
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
   };
   document.getElementById('clearList').onclick = async () => {
     await clearList();
+    await updateBackgroundList();
     await updatePageList();
   };
 });

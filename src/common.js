@@ -15,7 +15,11 @@ export function getList() {
 
 export function pushList(value) {
   return getList().then(list => {
-    list.push(value);
+    const ID = list.length ? list[list.length - 1].ID + 1 : 1;
+    list.push({
+      ID,
+      ...value,
+    });
     return setList(list);
   });
 }
@@ -34,5 +38,5 @@ export function clearList() {
 }
 
 export const Signal = {
-    UpdateBackgroundList: 'UpdateBackgroundList'
-}
+  UpdateBackgroundList: 'UpdateBackgroundList',
+};

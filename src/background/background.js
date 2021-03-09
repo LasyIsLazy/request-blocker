@@ -2,37 +2,49 @@ console.log('background');
 
 import { getList, Signal } from '../common';
 
-function messageListener(
-    request,
-    sender,
-    sendResponse
-  ) {
-    console.log('message', request);
-    const handler = async () => {
-
-      const { signal } = request;
-      if (signal === Signal.UpdateBackgroundList) {
-        await updateList();
-        sendResponse({ farewell: 'goodbye' });
-      }
+function messageListener(request, sender, sendResponse) {
+  console.log('message', request);
+  const handler = async () => {
+    const { signal } = request;
+    if (signal === Signal.UpdateBackgroundList) {
+      await updateList();
+      sendResponse({});
     }
-    handler()
-    // IMPORTANT! Do not delete
-    return true
-  }
+  };
+  handler();
+  // IMPORTANT! Do not delete
+  return true;
+}
 
 let list = [];
 async function updateList() {
   list = await getList();
-  console.log('Update background list done.')
+  console.log('Update background list done.');
 }
 
 async function background() {
-  const getBlockResponse = ({ url }) => {
+  const getBlockResponse = detail => {
+    const requestUrl = detail.url;
     // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-BlockingResponse
-    //   console.log('list', list);
-    if (list.findIndex(item => item.url === url) !== -1) {
-      console.log('block', url);
+    const shouldBlock =
+      list.findIndex(({ pathType, url }) => {
+        switch (pathType) {
+          case 'glob':
+            console.log('glob');
+            // TODO: glob
+            return url === requestUrl;
+
+          case 'regex':
+            console.log('regex');
+            return new RegExp(url).exec(requestUrl);
+
+          default:
+            break;
+        }
+        return false;
+      }) !== -1;
+    if (shouldBlock) {
+      console.log('block', requestUrl);
       return {
         cancel: true,
       };
