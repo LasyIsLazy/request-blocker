@@ -27,16 +27,16 @@ async function background() {
     const requestUrl = detail.url;
     // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-BlockingResponse
     const shouldBlock =
-      list.findIndex(({ pathType, url }) => {
+      list.findIndex(({ pathType, pattern }) => {
         switch (pathType) {
           case 'glob':
-            console.log('glob');
+            console.log('glob', pattern);
             // TODO: glob
-            return url === requestUrl;
+            return pattern === requestUrl;
 
           case 'regex':
-            console.log('regex');
-            return new RegExp(url).exec(requestUrl);
+            console.log('regex', pattern);
+            return new RegExp(pattern).exec(requestUrl);
 
           default:
             break;
