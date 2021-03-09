@@ -20,6 +20,23 @@ const popup = {
     }),
   ],
 };
+const options = {
+  input: 'src/options/options.js',
+  output: {
+    file: 'dist/options/options.js',
+    format: 'iife',
+  },
+  plugins: [
+    copy({
+      targets: [
+        {
+          src: 'src/options/options.html',
+          dest: 'dist/options/',
+        },
+      ],
+    }),
+  ],
+};
 const background = {
   input: 'src/background/background.js',
   output: {
@@ -34,4 +51,4 @@ const content = {
     format: 'iife',
   },
 }
-export default [popup, background, content];
+export default [popup,options, background, content];

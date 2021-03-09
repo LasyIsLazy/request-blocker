@@ -1,6 +1,6 @@
 {
   "name": "request-blocker",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "request-blocker",
   "main": "background.js",
   "dependencies": {},
