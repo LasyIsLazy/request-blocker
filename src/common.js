@@ -32,3 +32,7 @@ export function setList(value) {
 export function clearList() {
   return setList([]);
 }
+
+export const Signal = {
+    UpdateBackgroundList: 'UpdateBackgroundList'
+}
