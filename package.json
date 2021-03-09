@@ -3,10 +3,14 @@
   "version": "0.0.1",
   "description": "request-blocker",
   "main": "background.js",
-  "dependencies": {},
+  "dependencies": {
+    "brace-expansion": "^2.0.1"
+  },
   "devDependencies": {
     "rollup": "^2.40.0",
-    "rollup-plugin-copy": "^3.4.0"
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "scripts": {
     "dev": "rollup -c -w",

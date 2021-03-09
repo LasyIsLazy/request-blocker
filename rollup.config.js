@@ -1,4 +1,6 @@
 import copy from 'rollup-plugin-copy';
+import nodeResolve from "rollup-plugin-node-resolve";
+import commonJs from 'rollup-plugin-commonjs'
 const popup = {
   input: 'src/popup/popup.js',
   output: {
@@ -43,6 +45,10 @@ const background = {
     file: 'dist/background/background.js',
     format: 'iife',
   },
+  plugins: [
+    nodeResolve({preferBuiltins: true, browser: true}),
+    commonJs(),
+  ]
 }
 const content = {
   input: 'src/content/content.js',

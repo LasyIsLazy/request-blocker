@@ -1,5 +1,4 @@
-console.log('background');
-
+import minimatch from "../minimatch";
 import { getList, Signal } from '../common';
 
 function messageListener(request, sender, sendResponse) {
@@ -31,8 +30,7 @@ async function background() {
         switch (pathType) {
           case 'glob':
             console.log('glob', pattern);
-            // TODO: glob
-            return pattern === requestUrl;
+            return minimatch(requestUrl, pattern)
 
           case 'regex':
             console.log('regex', pattern);
